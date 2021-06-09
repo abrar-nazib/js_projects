@@ -19,25 +19,49 @@ function complete() {
 }
 
 // Show New Quotes
-function newQuote() {
+async function newQuote() {
   loading();
   // Pick a Random quote from apiQuotes array
-  const quote = apiQuotes[Math.floor(Math.random() * apiQuotes.length)];
+  //   const quote = apiQuotes[Math.floor(Math.random() * apiQuotes.length)];
 
   // Pick a Random quote from local array
   //const quote = localQuotes[Math.floor(Math.random() * localQuotes.length)];
 
   //   If author field is empty will be replaced with Unknown
-  authorText.textContent = quote.author != null ? quote.author : "Unknown";
+  //   authorText.textContent = quote.author != null ? quote.author : "Unknown";
 
-  // Check quote length and determine font-size
-  if (quote.text.length > 100) {
-    quoteText.classList.add("long-quote");
-  } else {
-    quoteText.classList.remove("long-quote");
+  //   // Check quote length and determine font-size
+  //   if (quote.text.length > 100) {
+  //     quoteText.classList.add("long-quote");
+  //   } else {
+  //     quoteText.classList.remove("long-quote");
+  //   }
+  //   // Set Quote, Hide Loader
+  //   quoteText.textContent = quote.text;
+  //   complete();
+
+  //--------------- My version of quote api -----------
+  const quoteUrl = "https://goquotes-api.herokuapp.com/api/v1/random?count=1";
+  try {
+    const response = await fetch(quoteUrl);
+    const responseJSON = await response.json();
+    const quote = responseJSON.quotes[0];
+    // console.log(quote);
+    authorText.textContent = quote.author != null ? quote.author : "Unknown";
+
+    // Check quote length and determine font-size
+    if (quote.text.length > 100) {
+      quoteText.classList.add("long-quote");
+    } else {
+      quoteText.classList.remove("long-quote");
+    }
+    // Set Quote, Hide Loader
+    quoteText.textContent = quote.text;
+    complete();
+  } catch (error) {
+    //Catch error
+    alert(error.message);
   }
-  // Set Quote, Hide Loader
-  quoteText.textContent = quote.text;
   complete();
 }
 
